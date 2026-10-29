@@ -1,0 +1,43 @@
+
+name: Portfolio CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate portfolio files
+        run: |
+          test -f index.html
+          test -f style.css
+          test -f Dockerfile
+          grep -q "FA23-BAI-027" index.html
+          grep -q "Contact Me" index.html
+          echo "Portfolio validation passed."
+
+      - name: Build Docker image
+        run: docker build -t devops-a2-fa23-bai-027:${{ github.sha }} .
+
+      - name: Login to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: faareh21/devops-a2-fa23-bai-027:latest
