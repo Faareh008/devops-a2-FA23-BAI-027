@@ -3,7 +3,7 @@ name: Portfolio CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [main, test-failure-evidence]
   pull_request:
     branches: [main]
 
@@ -14,6 +14,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Intentional failure for assignment evidence
+        if: github.ref == 'refs/heads/test-failure-evidence'
+        run: |
+          echo "Demonstrating a failed workflow run for the assignment."
+          exit 1
 
       - name: Validate portfolio files
         run: |
