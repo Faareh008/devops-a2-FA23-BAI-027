@@ -21,3 +21,9 @@ CI/CD automation, and webhook event monitoring.
 
 ## Run Locally
 Open index.html in a web browser.
+
+## Learning Objectives
+- Practice Git version control and branching.
+- Containerize the webpage using Docker.
+- Automate validation and image publishing with GitHub Actions.
+- Inspect repository events using GitHub Webhooks.
